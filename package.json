@@ -12,6 +12,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.948.0",
+    "@aws-sdk/lib-dynamodb": "^3.948.0",
     "@hono/node-server": "^1.19.7",
     "hono": "^4.10.8"
   },
