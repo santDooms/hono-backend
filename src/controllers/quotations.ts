@@ -1,7 +1,6 @@
 import { Context } from "hono";
 import { CreateQuotationDTO, ListDashboardQuotationsDTO } from "../schemas/quotation_schemas";
 import * as service from "../services/quotationService";
-import { AppError } from "../middlewares/error_handler";
 
 export const createQuotation = async (c: Context) => {
   try {
@@ -15,7 +14,12 @@ export const createQuotation = async (c: Context) => {
 };
 
 export const listQuotations = async (c: Context) => {
-  const dto = await c.req.json<ListDashboardQuotationsDTO>();
-  const result = await service.listByBroker(dto);
-  return c.json(result);
+  try {
+    const dto = await c.req.json<ListDashboardQuotationsDTO>();
+    const result = await service.listByBroker(dto);
+    return c.json(result);
+  } catch (error: unknown) {
+    console.error("Error in listQuotations controller:", error);
+    throw error;
+  }
 };

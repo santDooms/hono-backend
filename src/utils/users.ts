@@ -1,21 +1,44 @@
-interface User {
-  userId: string;
-  email: string;
-  role: "ADMIN" | "USER";
-  brokerKey: string;
-}
+import { User } from "../types";
 
-const USERS: User[] = [
+export const USERS: User[] = [
   {
-    userId: "user-123",
-    email: "admin@demo.com",
-    role: "ADMIN",
-    brokerKey: "123",
+    id: "1",
+    email: "admin@seguros.com",
+    password: "admin123",
+    name: "Administrador",
+    role: "admin",
+    createdAt: new Date(),
+    isActive: true,
+    brokerKey: "123"
   },
   {
-    userId: "user-456",
-    email: "user@demo.com",
-    role: "USER",
-    brokerKey: "456",
+    id: "2", 
+    email: "broker1@seguros.com",
+    password: "broker123",
+    name: "Juan Pérez",
+    role: "broker",
+    brokerKey: "789456",
+    createdAt: new Date(),
+    isActive: true
+  },
+  {
+    id: "3",
+    email: "broker2@seguros.com", 
+    password: "broker123",
+    name: "María García",
+    role: "broker",
+    brokerKey: "123456",
+    createdAt: new Date(),
+    isActive: true
+  },
+  {
+    id: "4",
+    email: "cliente@test.com",
+    password: "cliente123",
+    name: "Cliente Test",
+    role: "user",
+    createdAt: new Date(),
+    isActive: true,
+    brokerKey: "741852"
   }
 ];
