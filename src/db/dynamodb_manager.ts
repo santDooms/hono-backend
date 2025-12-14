@@ -1,5 +1,5 @@
 import { DynamoDBClient, CreateTableCommand } from "@aws-sdk/client-dynamodb";
-import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBDocumentClient , PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 
 const TABLE_NAME = "Quotations";
 
@@ -28,4 +28,31 @@ export const createDynamoTable = () => {
     BillingMode: "PAY_PER_REQUEST",
   });
   return client.send(command);
+};
+
+export const saveQuotation = async (item: any) => {
+  try {
+    return dynamoClient.send(
+      new PutCommand({
+        TableName: TABLE_NAME,
+        Item: item,
+      })
+    );
+  } catch (error) {
+    console.error("Error saving quotation to DynamoDB:", error);
+    throw error;
+  }
+};
+
+export const queryQuotationsByBrokerKey = async (brokerKey: string, exclusiveStartKey?: Record<string, unknown>) => {
+  const params: any = {
+    TableName: TABLE_NAME,
+    IndexName: "BrokerKeyIndex", // requiere crear un GSI con partition key = brokerKey y sort key = createdAt
+    KeyConditionExpression: "brokerKey = :bk",
+    ExpressionAttributeValues: { ":bk": brokerKey },
+    Limit: 10,
+    ScanIndexForward: false, // más recientes primero
+  };
+  if (exclusiveStartKey) params.ExclusiveStartKey = exclusiveStartKey;
+  return dynamoClient.send(new QueryCommand(params));
 };
