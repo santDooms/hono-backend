@@ -3,7 +3,7 @@ import { z } from "zod";
 export const PersonResponseSchema = z.object({
   nombre: z.string(),
   edad: z.number().min(18).max(100),
-  cedula: z.string().min(10).max(10),
+  cedula: z.string().min(4),
   direccion: z.string().optional(),
   estadoCivil: z.string().optional(),
 });

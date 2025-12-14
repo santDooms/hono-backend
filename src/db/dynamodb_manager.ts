@@ -1,7 +1,7 @@
 import { DynamoDBClient, CreateTableCommand } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient , PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
-
-const TABLE_NAME = "Quotations";
+import { TABLE_NAME } from "../env/dev";
+import { AppError } from "../middlewares/error_handler";
 
 const client = new DynamoDBClient({ // infra
   region: "us-east-1",
@@ -40,7 +40,7 @@ export const saveQuotation = async (item: any) => {
     );
   } catch (error) {
     console.error("Error saving quotation to DynamoDB:", error);
-    throw error;
+    throw new AppError("Failed to save quotation", 500, error, "DYNAMODB_SAVE_ERROR");
   }
 };
 
