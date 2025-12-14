@@ -7,8 +7,9 @@ export const CreateQuotationSchema = z.object({
 });
 
 export const list_dashboard_quotations_schema = z.object({
-  brokerKey: z.string(),
-  nextKey: z.string().optional()
+  brokerKey: z.string().min(1),
+  limit: z.number().max(10),
+  nextKey: z.string().optional(),
 });
 
 export type CreateQuotationDTO = z.infer<typeof CreateQuotationSchema>;

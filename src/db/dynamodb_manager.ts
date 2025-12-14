@@ -1,7 +1,8 @@
-import { DynamoDBClient, CreateTableCommand } from "@aws-sdk/client-dynamodb";
-import { DynamoDBDocumentClient , PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBClient, CreateTableCommand, PutItemCommand } from "@aws-sdk/client-dynamodb";
+import { DynamoDBDocumentClient , PutCommand, QueryCommand, QueryCommandInput } from "@aws-sdk/lib-dynamodb";
 import { TABLE_NAME } from "../env/dev";
 import { AppError } from "../middlewares/error_handler";
+import { Quotation } from "../types";
 
 const client = new DynamoDBClient({ // infra
   region: "us-east-1",
@@ -12,7 +13,12 @@ const client = new DynamoDBClient({ // infra
   },
 });
 
-const dynamoClient = DynamoDBDocumentClient.from(client); // data
+const dynamoClient = DynamoDBDocumentClient.from(client, {
+  // data
+  marshallOptions: {
+    removeUndefinedValues: true,
+  },
+}); 
 
 export const createDynamoTable = () => {
   const command = new CreateTableCommand({
@@ -44,15 +50,22 @@ export const saveQuotation = async (item: any) => {
   }
 };
 
-export const queryQuotationsByBrokerKey = async (brokerKey: string, exclusiveStartKey?: Record<string, unknown>) => {
-  const params: any = {
+export const queryQuotationsByBrokerKey = async (brokerKey: string, exclusiveStartKey?: Record<string, unknown>, limit: number = 10 ) : Promise<{
+  Items: Quotation[];
+  LastEvaluatedKey?: Record<string, unknown>;
+}> => {
+  const params: QueryCommandInput = {
     TableName: TABLE_NAME,
-    IndexName: "BrokerKeyIndex", // requiere crear un GSI con partition key = brokerKey y sort key = createdAt
+    IndexName: "BrokerKeyIndex",
     KeyConditionExpression: "brokerKey = :bk",
     ExpressionAttributeValues: { ":bk": brokerKey },
-    Limit: 10,
-    ScanIndexForward: false, // más recientes primero
+    Limit: limit,
+    ScanIndexForward: false,
   };
   if (exclusiveStartKey) params.ExclusiveStartKey = exclusiveStartKey;
-  return dynamoClient.send(new QueryCommand(params));
+  const dynamoResponse = await dynamoClient.send(new QueryCommand(params));
+  return {
+    Items: dynamoResponse.Items as Quotation[] || [],
+    LastEvaluatedKey: dynamoResponse.LastEvaluatedKey,
+  };
 };
