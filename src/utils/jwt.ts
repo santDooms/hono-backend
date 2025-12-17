@@ -9,7 +9,7 @@ export const generateToken = (user: User): string => {
     brokerKey: user.brokerKey
   };
 
-  const secretJwt = "default-secret";
+  const secretJwt = "default-secret";//TODO: FIX ENV
   const time = "1h";
 
   return jwt.sign(payload, secretJwt, {
