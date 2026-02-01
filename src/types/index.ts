@@ -10,7 +10,8 @@ export interface Quotation {
   vehiculo?: string;          
   marca?: string;             
   modelo?: string;           
-  valorPrima?: number;        
+  valorPrima?: number;
+  prima?: number;        
   [k: string]: unknown;
 }
 
