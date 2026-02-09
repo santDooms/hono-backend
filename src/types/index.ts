@@ -11,7 +11,8 @@ export interface Quotation {
   marca?: string;             
   modelo?: string;           
   valorPrima?: number;
-  prima?: number;        
+  prima?: number;
+  quotationStep?: QuotationStep;
   [k: string]: unknown;
 }
 
@@ -44,3 +45,5 @@ export interface PaginatedResult<T> {
   nextKey?: string | null;
   total?: number;
 }
+
+export type QuotationStep = "validationStep" | "vehicleStep" | "personStep" | "coverageStep";

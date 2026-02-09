@@ -7,6 +7,7 @@ export const personMockData: Record<string, PersonResponseDTO>= {
     cedula: "123456",
     direccion: "Av. Principal 123",
     estadoCivil: "Soltero",
+    tipoIdentificacion: "cc",
   },
   "123456789": {
     nombre: "María García",
@@ -14,6 +15,7 @@ export const personMockData: Record<string, PersonResponseDTO>= {
     cedula: "123456789",
     direccion: "Calle Secundaria 456",
     estadoCivil: "Casada",
+    tipoIdentificacion: "ce",
   },
 };
 

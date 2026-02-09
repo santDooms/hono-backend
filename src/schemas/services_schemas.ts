@@ -4,6 +4,7 @@ export const PersonResponseSchema = z.object({
   nombre: z.string(),
   edad: z.number().min(18).max(100),
   cedula: z.string().min(4),
+  tipoIdentificacion: z.enum(["cc", "ce", "passport"]),
   direccion: z.string().optional(),
   estadoCivil: z.string().optional(),
 });

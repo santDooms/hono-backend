@@ -1,15 +1,14 @@
 import { Quotation, PaginatedResult } from "../types";
 import { saveQuotation, queryQuotationsByBrokerKey } from "../db/dynamodb_manager";
 import { CreateQuotationDTO, ListDashboardQuotationsDTO } from "../schemas/quotation_schemas";
-import { getPersonInfo, getVehicleInfo } from "./external_services";
 import { parseQuotationItem } from "../utils/parsers";
+import { checkPersonInfo, checkVehicleInfo } from "./newQuotationService";
 
 export const createQuotation = async (dto: CreateQuotationDTO): Promise<Quotation> => {
   const [personInfo, vehicleInfo] = await Promise.all([
-    getPersonInfo(dto.cedula),
-    getVehicleInfo(dto.placa),
+    checkPersonInfo(dto.cedula),
+    checkVehicleInfo(dto.placa),
   ]);
-
   const item: Quotation = parseQuotationItem(dto, personInfo, vehicleInfo);
   await saveQuotation(item);
   return item;
